@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Table from './Table/Table';
 
 class App extends Component {
     state = {
@@ -17,8 +16,8 @@ class App extends Component {
         },
         tmp_alt_chegada: [],
         tmp_alt_servico: [],
-        total_time: 0,
-        html_table_tbody: ''
+        total_time: '',
+        html_table_tbody: []
     };
 
     saveTimeHandler = (type) => {
@@ -56,11 +55,62 @@ class App extends Component {
     
     constructTable = () => {
 
-        let htmlContent = (
-            Object.keys(this.state.tempos).map((item, index) => (
-                <th key={index}> {this.state.tempos[item].name} </th>
-            ))
-        );
+        let rdm_chegada = this.state.tmp_alt_chegada.length;
+        let rdm_servico = this.state.tmp_alt_servico.length;
+        let count_limit = 0;
+        let count_line = 1
+        let content_body_array = [];
+        while (count_limit <= parseInt(this.state.total_time)) {
+            let sort_value_chegada = parseInt(this.state.tmp_alt_chegada[Math.floor(Math.random() * rdm_chegada)]);
+            let sort_value_servico = parseInt(this.state.tmp_alt_servico[Math.floor(Math.random() * rdm_servico)]); 
+            count_limit += sort_value_chegada;
+
+            let tempoInicioServicoRelogio;
+            let tempoClienteNaFila;
+            let tempoLivreOperador;
+            if (content_body_array.length >= 1) {
+                tempoInicioServicoRelogio = 0;
+
+
+                let last_tempo_final_servico_relogio = content_body_array[content_body_array.length - 1].tempo_final_servico_relogio;
+                if (last_tempo_final_servico_relogio >= count_limit) {
+                    tempoClienteNaFila = last_tempo_final_servico_relogio - count_limit;
+                } else {
+                    tempoClienteNaFila = 0
+                }
+
+                tempoInicioServicoRelogio = count_limit + tempoClienteNaFila;
+
+                // tempoLivreOperador
+                if(count_limit < last_tempo_final_servico_relogio) {
+                    tempoLivreOperador = last_tempo_final_servico_relogio - count_limit;
+                } else {
+                    tempoLivreOperador = 0;
+                }
+            } else {
+                tempoInicioServicoRelogio = sort_value_chegada;
+                tempoClienteNaFila = 0;
+                tempoLivreOperador = sort_value_chegada;
+            }
+
+            content_body_array.push({
+                line: count_line++,
+                tempo_ultima_chegada: sort_value_chegada,
+                tempo_de_chegada_no_relogio: count_limit,
+                tempo_de_servico: sort_value_servico,
+                tempo_inicio_servico_relogio: tempoInicioServicoRelogio,
+                tempo_cliente_na_fila: tempoClienteNaFila,
+                tempo_final_servico_relogio: (sort_value_servico + tempoInicioServicoRelogio),
+                tempo_cliente_no_sistema: (sort_value_servico + tempoClienteNaFila),
+                tempo_livre_operador: tempoLivreOperador
+
+            });
+        }
+
+        this.setState({
+            html_table_tbody: content_body_array
+        });
+
     }
 
 
@@ -72,6 +122,40 @@ class App extends Component {
                 <th key={index}> {this.state.tempos[item].name} </th>
             ))
         )        
+
+        let tr = (
+            this.state.html_table_tbody.map((item, index) => (
+                <tr key={index}> 
+                    <td>
+                        {item.line}
+                    </td>
+                    <td>
+                        {item.tempo_ultima_chegada}
+                    </td>
+                    <td>
+                        {item.tempo_de_chegada_no_relogio}
+                    </td>
+                    <td>
+                        {item.tempo_de_servico}
+                    </td>
+                    <td>
+                        {item.tempo_inicio_servico_relogio}
+                    </td>
+                    <td>
+                        {item.tempo_cliente_na_fila}
+                    </td>
+                    <td>
+                        {item.tempo_final_servico_relogio}
+                    </td>
+                    <td>
+                        {item.tempo_cliente_no_sistema}
+                    </td>
+                    <td>
+                        {item.tempo_livre_operador}
+                    </td>
+                </tr>
+            ))
+        );
 
         return (
             <div className="App">
@@ -109,13 +193,11 @@ class App extends Component {
                     <thead>
                         <tr>
                             <th>Cliente</th>
+                            {th}
                         </tr>
-                        {th}
                     </thead>
                     <tbody>
-                        <tr ref="line">
-                            <Table tmp_alt={this.state.tmp_alt_chegada.length} />
-                        </tr>
+                        {tr}
                     </tbody>
                 </table>
             </div>
