@@ -17,7 +17,12 @@ class App extends Component {
         tmp_alt_chegada: [],
         tmp_alt_servico: [],
         total_time: '',
-        html_table_tbody: []
+        html_table_tbody: [],
+        t_m_espera_fila: 0,
+        p_cliente_esperar_na_fila: 0,
+        p_operador_livre: 0,
+        t_m_servico: 0,
+        t_m_despendido_do_sistema: 0
     };
 
     saveTimeHandler = (type) => {
@@ -60,18 +65,31 @@ class App extends Component {
         let count_limit = 0;
         let count_line = 1
         let content_body_array = [];
-        while (count_limit <= parseInt(this.state.total_time)) {
+
+        let total_tempo_servico = 0;
+        let total_tempo_cliente_na_fila = 0;
+        let total_tempo_cliente_no_sistema = 0;
+        let total_tempo_livre_operador = 0;
+
+        while (true) {
             let sort_value_chegada = parseInt(this.state.tmp_alt_chegada[Math.floor(Math.random() * rdm_chegada)]);
             let sort_value_servico = parseInt(this.state.tmp_alt_servico[Math.floor(Math.random() * rdm_servico)]); 
             count_limit += sort_value_chegada;
 
+            if (count_limit > parseInt(this.state.total_time)) {
+                break;
+            }
+
+            total_tempo_servico += sort_value_servico;
+
             let tempoInicioServicoRelogio;
             let tempoClienteNaFila;
             let tempoLivreOperador;
+
             if (content_body_array.length >= 1) {
                 tempoInicioServicoRelogio = 0;
 
-
+                // tempoClienteNaFila
                 let last_tempo_final_servico_relogio = content_body_array[content_body_array.length - 1].tempo_final_servico_relogio;
                 if (last_tempo_final_servico_relogio >= count_limit) {
                     tempoClienteNaFila = last_tempo_final_servico_relogio - count_limit;
@@ -93,6 +111,13 @@ class App extends Component {
                 tempoLivreOperador = sort_value_chegada;
             }
 
+            total_tempo_cliente_na_fila += tempoClienteNaFila;
+            total_tempo_cliente_no_sistema += (sort_value_servico + tempoClienteNaFila);
+            total_tempo_livre_operador += tempoLivreOperador;
+
+
+
+            // array com os valores de cada linha da tablea
             content_body_array.push({
                 line: count_line++,
                 tempo_ultima_chegada: sort_value_chegada,
@@ -107,8 +132,22 @@ class App extends Component {
             });
         }
 
+        let tempos_change = this.state.tempos;
+
+
+        tempos_change.t_servico.value =            total_tempo_servico;
+        tempos_change.t_cliente_fila.value =       total_tempo_cliente_na_fila;
+        tempos_change.t_cliente_no_sistema.value = total_tempo_cliente_no_sistema;
+        tempos_change.t_livre_operador.value =     total_tempo_livre_operador;
+
         this.setState({
-            html_table_tbody: content_body_array
+            tempos: tempos_change,
+            html_table_tbody: content_body_array,
+            t_m_espera_fila: (total_tempo_cliente_na_fila/count_line),
+            p_cliente_esperar_na_fila: (total_tempo_cliente_na_fila/count_line),
+            p_operador_livre: total_tempo_livre_operador/(content_body_array[content_body_array.length - 1].tempo_final_servico_relogio),
+            t_m_servico: (total_tempo_cliente_na_fila/count_line),
+            t_m_despendido_do_sistema: (total_tempo_cliente_no_sistema/count_line)
         });
 
     }
@@ -157,6 +196,39 @@ class App extends Component {
             ))
         );
 
+
+        let total_times = (
+            <tr> 
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    <strong>{this.state.tempos.t_servico.value}</strong>
+                </td>
+                <td>
+                   
+                </td>
+                <td>
+                    <strong>{this.state.tempos.t_cliente_fila.value}</strong>
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    <strong>{this.state.tempos.t_cliente_no_sistema.value}</strong>
+                </td>
+                <td>
+                    <strong>{this.state.tempos.t_livre_operador.value}</strong>
+                </td>
+            </tr>
+        );
+
         return (
             <div className="App">
                 <header className="App-header">
@@ -198,8 +270,27 @@ class App extends Component {
                     </thead>
                     <tbody>
                         {tr}
+                        {total_times}
                     </tbody>
                 </table>
+
+                <div>
+                    <li>
+                        Tempo Médio de Espera na Fila: {this.state.t_m_espera_fila}
+                    </li>
+                    <li>		
+                        Probabilidade de um cliente esperar na fila: {this.state.p_cliente_esperar_na_fila}	
+                    </li>
+                    <li>		
+                        Probabilidade do Operador Livre: {this.state.p_operador_livre}
+                    </li>
+                    <li>
+                        Tempo Médio de Serviço: {this.state.t_m_servico}
+                    </li>
+                    <li>
+                        Tempo Médio Despendido no Sistema: {this.state.t_m_despendido_do_sistema}
+                    </li>
+                </div>
             </div>
         );
     }
