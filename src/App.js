@@ -230,37 +230,66 @@ class App extends Component {
         );
 
         return (
-            <div className="App">
+            <div className="App container-fluid">
                 <header className="App-header">
                     <h1 className="App-title">Simulação</h1>
                 </header>
-                <div>
-                    <div>
-                        <label htmlFor="lastStart">Tempo desde a última chegada</label>
-                        <input type="text" ref="lastStart" name="lastStart"/>
-                        <button onClick={ () => this.saveTimeHandler('chegada')} >add</button>
-                        <br/>
-                        <br/>
-                        <textarea name="addedValues" cols="20" rows="4" ref="textAreaAddedValues" ></textarea>
+
+                <div className="row">
+                    <div className="col">
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Tempo desde a última chegada" name="lastStart" ref="lastStart" aria-label="Tempo desde a última chegada" />
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('chegada')} >Add</button>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label htmlFor="service">Tempo de serviço</label>
-                        <input type="text" ref="service" name="service"/>
-                        <button onClick={ () => this.saveTimeHandler('servico') } >add</button>
-                        <br/>
-                        <br/>
-                        <textarea name="addedValues" cols="20" rows="4" ref="addedValuesService" ></textarea>
+                    <div className="col">
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Tempo de serviço" ref="service" name="service" aria-label="Tempo de serviço" />
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('servico') } >Add</button>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label htmlFor="total_time">Tempo total da simulação</label>
-                        <input type="text" ref="total_time" name="total_time"/>
-                        <button onClick={ () => this.saveTimeHandler('total_time') } >add</button>
-                        <br/>
-                        <br/>
-                        <textarea name="addedValues" cols="10" rows="1" ref="addedValuesTotalTime" ></textarea>
+                    <div className="col">
+                        <div className="input-group mb-3">
+                            <input type="text" className="form-control" placeholder="Tempo total da simulação" ref="total_time" name="total_time" aria-label="Tempo total da simulação" />
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('total_time') } >Add</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button onClick={this.constructTable} >Simular</button>
+
+                <div className="row">
+                    <div className="col">
+                        <div class="input-group">
+                            <textarea name="addedValues" ref="textAreaAddedValues" class="form-control" aria-label="With textarea"></textarea>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div class="input-group">
+                            <textarea name="addedValues" ref="addedValuesService" class="form-control" aria-label="With textarea"></textarea>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div class="input-group">
+                            <textarea name="addedValues" ref="addedValuesTotalTime" class="form-control" aria-label="With textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row button-simulate">
+                    <div className="col">
+                        <div class="input-group">   
+                            <button onClick={this.constructTable} type="button" class="btn btn-dark btn-lg">Simular</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+
                 <table >
                     <thead>
                         <tr>
