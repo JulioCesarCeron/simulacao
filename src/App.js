@@ -293,8 +293,6 @@ class App extends Component {
                         </div>
                     </div>
 
-                    
-
                     <table className="table" >
                         <thead>
                             <tr>
@@ -307,8 +305,6 @@ class App extends Component {
                             {total_times}
                         </tbody>
                     </table>
-
-
 
                     <table className="table table-40">
                         <tbody>
