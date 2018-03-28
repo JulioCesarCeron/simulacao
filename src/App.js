@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Table} from 'react-bootstrap'
 
 class App extends Component {
     state = {
@@ -158,16 +159,16 @@ class App extends Component {
         let th = null;
         th = (
             Object.keys(this.state.tempos).map((item, index) => (
-                <th key={index}> {this.state.tempos[item].name} </th>
+                <th scope="col" key={index}> {this.state.tempos[item].name} </th>
             ))
         )        
 
         let tr = (
             this.state.html_table_tbody.map((item, index) => (
                 <tr key={index}> 
-                    <td>
+                    <th scope="row">
                         {item.line}
-                    </td>
+                    </th>
                     <td>
                         {item.tempo_ultima_chegada}
                     </td>
@@ -264,33 +265,33 @@ class App extends Component {
 
                 <div className="row">
                     <div className="col">
-                        <div class="input-group">
-                            <textarea name="addedValues" ref="textAreaAddedValues" class="form-control" aria-label="With textarea"></textarea>
+                        <div className="input-group">
+                            <textarea name="addedValues" ref="textAreaAddedValues" className="form-control" aria-label="With textarea"></textarea>
                         </div>
                     </div>
                     <div className="col">
-                        <div class="input-group">
-                            <textarea name="addedValues" ref="addedValuesService" class="form-control" aria-label="With textarea"></textarea>
+                        <div className="input-group">
+                            <textarea name="addedValues" ref="addedValuesService" className="form-control" aria-label="With textarea"></textarea>
                         </div>
                     </div>
                     <div className="col">
-                        <div class="input-group">
-                            <textarea name="addedValues" ref="addedValuesTotalTime" class="form-control" aria-label="With textarea"></textarea>
+                        <div className="input-group">
+                            <textarea name="addedValues" ref="addedValuesTotalTime" className="form-control" aria-label="With textarea"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div className="row button-simulate">
                     <div className="col">
-                        <div class="input-group">   
-                            <button onClick={this.constructTable} type="button" class="btn btn-dark btn-lg">Simular</button>
+                        <div className="input-group">   
+                            <button onClick={this.constructTable} type="button" className="btn btn-dark btn-lg">Simular</button>
                         </div>
                     </div>
                 </div>
 
                 
 
-                <table >
+                <table className="table" >
                     <thead>
                         <tr>
                             <th>Cliente</th>
@@ -303,23 +304,33 @@ class App extends Component {
                     </tbody>
                 </table>
 
-                <div>
-                    <li>
-                        Tempo Médio de Espera na Fila: {this.state.t_m_espera_fila}
-                    </li>
-                    <li>		
-                        Probabilidade de um cliente esperar na fila: {this.state.p_cliente_esperar_na_fila}	
-                    </li>
-                    <li>		
-                        Probabilidade do Operador Livre: {this.state.p_operador_livre}
-                    </li>
-                    <li>
-                        Tempo Médio de Serviço: {this.state.t_m_servico}
-                    </li>
-                    <li>
-                        Tempo Médio Despendido no Sistema: {this.state.t_m_despendido_do_sistema}
-                    </li>
-                </div>
+
+
+                <table className="table table-40">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Tempo Médio de Espera na Fila:</th>
+                            <td>{this.state.t_m_espera_fila}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Probabilidade de um cliente esperar na fila:</th>
+                            <td>{this.state.p_cliente_esperar_na_fila}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Probabilidade do Operador Livre:</th>
+                            <td>{this.state.p_operador_livre}</td>
+                        </tr>
+                        <tr>
+                            <th>Tempo Médio de Serviço: </th>
+                            <td>{this.state.t_m_servico}</td>
+                        </tr>
+                        <tr>
+                            <th> Tempo Médio Despendido no Sistema: </th>
+                            <td>{this.state.t_m_despendido_do_sistema}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
         );
     }
