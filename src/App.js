@@ -230,106 +230,112 @@ class App extends Component {
         );
 
         return (
-            <div className="App container-fluid">
-                <header className="App-header">
-                    <h1 className="App-title">Simulação</h1>
-                </header>
+            <div>
+                <div className="pos-f-t">
+                    <nav className="navbar navbar-dark bg-dark">
+                        <h1 className="title-custom" >Simulação tempos de lavagem</h1>
+                    </nav>
+                </div>
 
-                <div className="row">
-                    <div className="col">
-                        <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Tempo desde a última chegada" name="lastStart" ref="lastStart" aria-label="Tempo desde a última chegada" />
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('chegada')} >Add</button>
+                <div className="App container-fluid">
+                    
+
+                    <div className="row">
+                        <div className="col">
+                            <div className="input-group mb-3">
+                                <input type="text" className="form-control" placeholder="Tempo desde a última chegada" name="lastStart" ref="lastStart" aria-label="Tempo desde a última chegada" />
+                                <div className="input-group-append">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('chegada')} >Add</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="input-group mb-3">
+                                <input type="text" className="form-control" placeholder="Tempo de serviço" ref="service" name="service" aria-label="Tempo de serviço" />
+                                <div className="input-group-append">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('servico') } >Add</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="input-group mb-3">
+                                <input type="text" className="form-control" placeholder="Tempo total da simulação" ref="total_time" name="total_time" aria-label="Tempo total da simulação" />
+                                <div className="input-group-append">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('total_time') } >Add</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="col">
-                        <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Tempo de serviço" ref="service" name="service" aria-label="Tempo de serviço" />
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('servico') } >Add</button>
+
+                    <div className="row">
+                        <div className="col">
+                            <div className="input-group">
+                                <textarea name="addedValues" ref="textAreaAddedValues" className="form-control" aria-label="With textarea"></textarea>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="input-group">
+                                <textarea name="addedValues" ref="addedValuesService" className="form-control" aria-label="With textarea"></textarea>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="input-group">
+                                <textarea name="addedValues" ref="addedValuesTotalTime" className="form-control" aria-label="With textarea"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div className="col">
-                        <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Tempo total da simulação" ref="total_time" name="total_time" aria-label="Tempo total da simulação" />
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-secondary" type="button" onClick={ () => this.saveTimeHandler('total_time') } >Add</button>
+
+                    <div className="row button-simulate">
+                        <div className="col">
+                            <div className="input-group">   
+                                <button onClick={this.constructTable} type="button" className="btn margin-custom btn-dark btn-lg">Simular</button>
                             </div>
                         </div>
                     </div>
+
+                    
+
+                    <table className="table" >
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                {th}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tr}
+                            {total_times}
+                        </tbody>
+                    </table>
+
+
+
+                    <table className="table table-40">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Tempo Médio de Espera na Fila:</th>
+                                <td>{this.state.t_m_espera_fila}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Probabilidade de um cliente esperar na fila:</th>
+                                <td>{this.state.p_cliente_esperar_na_fila}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Probabilidade do Operador Livre:</th>
+                                <td>{this.state.p_operador_livre}</td>
+                            </tr>
+                            <tr>
+                                <th>Tempo Médio de Serviço: </th>
+                                <td>{this.state.t_m_servico}</td>
+                            </tr>
+                            <tr>
+                                <th> Tempo Médio Despendido no Sistema: </th>
+                                <td>{this.state.t_m_despendido_do_sistema}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
-
-                <div className="row">
-                    <div className="col">
-                        <div className="input-group">
-                            <textarea name="addedValues" ref="textAreaAddedValues" className="form-control" aria-label="With textarea"></textarea>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="input-group">
-                            <textarea name="addedValues" ref="addedValuesService" className="form-control" aria-label="With textarea"></textarea>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="input-group">
-                            <textarea name="addedValues" ref="addedValuesTotalTime" className="form-control" aria-label="With textarea"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row button-simulate">
-                    <div className="col">
-                        <div className="input-group">   
-                            <button onClick={this.constructTable} type="button" className="btn btn-dark btn-lg">Simular</button>
-                        </div>
-                    </div>
-                </div>
-
-                
-
-                <table className="table" >
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            {th}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tr}
-                        {total_times}
-                    </tbody>
-                </table>
-
-
-
-                <table className="table table-40">
-                    <tbody>
-                        <tr>
-                            <th scope="row">Tempo Médio de Espera na Fila:</th>
-                            <td>{this.state.t_m_espera_fila}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Probabilidade de um cliente esperar na fila:</th>
-                            <td>{this.state.p_cliente_esperar_na_fila}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Probabilidade do Operador Livre:</th>
-                            <td>{this.state.p_operador_livre}</td>
-                        </tr>
-                        <tr>
-                            <th>Tempo Médio de Serviço: </th>
-                            <td>{this.state.t_m_servico}</td>
-                        </tr>
-                        <tr>
-                            <th> Tempo Médio Despendido no Sistema: </th>
-                            <td>{this.state.t_m_despendido_do_sistema}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
             </div>
         );
     }
